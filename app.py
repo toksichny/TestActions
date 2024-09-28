@@ -148,7 +148,7 @@ def download_images_from_pinterest(profile_name):
             with open(image_path, 'wb') as img_file:
                 img_file.write(response.content)
             print(f"Изображение {pin_id} скачано.")
-            save_downloaded_post(pin_id)
+            #save_downloaded_post(pin_id)
             downloaded_count += 1
         else:
             print(f"Ошибка при загрузке изображения {pin_id}: {response.status_code}")
@@ -226,7 +226,7 @@ def delete_image(image_path):
 if __name__ == "__main__":
     #keep_alive()
     #login_with_cookies()
-    email = "n3tcool@yandex.ru"
+    email = "netcool18@yandex.ru"
     password = "@Busing1234"
     login_to_pinterest(email, password)
 
@@ -234,7 +234,8 @@ if __name__ == "__main__":
     with open('profiles.txt', 'r') as f:
         profiles = [line.strip() for line in f if line.strip()]
 
-    last_download_time = get_last_download_time()  # Получаем время из базы данных
+    #last_download_time = get_last_download_time()  # Получаем время из базы данных
+    last_download_time = 0
     print("last_download_time = ", last_download_time)
 
     while True:
@@ -252,8 +253,9 @@ if __name__ == "__main__":
         if image_files:
             print("Переходим к публикации изображений...")
             for image_file in image_files:
-                #image_path = os.path.join('/workspaces/PinterestAutoPoste/ReadyImage/', image_file)
-                image_path = "/workspaces/PinterestAutoPoster/ReadyImage/" + image_file
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                # Создаем полный путь к директории ReadyImage
+                image_path = os.path.join(current_dir, "ReadyImage", image_file)
                 link = "https://t.me/fyefye"
                 if os.path.exists(image_path):
                     post_pin(image_path, link)
