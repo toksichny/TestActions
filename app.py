@@ -126,6 +126,7 @@ def download_random_image(profile_name):
     if downloaded_images == 10:
         print(f"Все 10 изображений профиля {profile_name} уже скачаны.")
         return None, None
+    return None, None 
 
 def post_pin(image_url):
     driver.get('https://ru.pinterest.com/pin-creation-tool/')
