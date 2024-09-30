@@ -208,6 +208,7 @@ if __name__ == "__main__":
 
         if image_url is not None and pin_id is not None:  # Проверяем, что значения не None
             post_pin(image_url)
+            break
         else:
             print(f"Изображения для профиля {random_profile} уже скачаны.")
             profiles.remove(random_profile)  # Удаляем профиль из списка
