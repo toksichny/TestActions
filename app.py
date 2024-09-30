@@ -201,18 +201,17 @@ if __name__ == "__main__":
     with open('profiles.txt', 'r') as f:
         profiles = [line.strip() for line in f if line.strip()]
 
-    while profiles:
+     while profiles:
         random_profile = random.choice(profiles)
         try:
             image_url, pin_id = download_random_image(random_profile)
-        
-            if image_url:
+
+            if image_url is not None and pin_id is not None:  # Проверяем, что значения не None
                 post_pin(image_url)
-                break
             else:
                 print(f"Изображения для профиля {random_profile} уже скачаны.")
-                profiles.remove(random_profile)
-    
+                profiles.remove(random_profile)  # Удаляем профиль из списка
+
         except Exception as e:
             print(f"Произошла ошибка при обработке профиля {random_profile}: {e}")
             profiles.remove(random_profile)  # Удаляем профиль из списка при ошибке
