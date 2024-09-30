@@ -201,7 +201,7 @@ if __name__ == "__main__":
     with open('profiles.txt', 'r') as f:
         profiles = [line.strip() for line in f if line.strip()]
 
-     while profiles:
+    while profiles:
         random_profile = random.choice(profiles)
         try:
             image_url, pin_id = download_random_image(random_profile)
