@@ -49,6 +49,45 @@ def login_to_pinterest(email, password):
         print("Авторизация прошла успешно!")
     else:
         print("Ошибка авторизации, проверьте логин или пароль.")
+
+def login_with_cookies():
+    print("Логинимся в Pinterest по кукам...")
+    
+    # Переход на главную страницу Pinterest для установки куков
+    driver.get('https://www.pinterest.com')
+    time.sleep(3)
+
+    with open('cookies.json', 'r') as f:
+        cookies = json.load(f)
+        for cookie in cookies:
+            try:
+                # Создаем словарь куки с проверкой на корректность 'expiry'
+                cookie_dict = {
+                    'name': cookie['name'],
+                    'value': cookie['value'],
+                    'domain': '.pinterest.com',  # Убедитесь, что домен правильный
+                    'path': cookie.get('path', '/')
+                }
+
+                # Убираем поле 'expiry', если оно некорректно
+                if 'expiry' in cookie and isinstance(cookie['expiry'], (int, float)):
+                    cookie_dict['expiry'] = cookie['expiry']
+                
+                # Добавляем куки в драйвер
+                driver.add_cookie(cookie_dict)
+            except Exception as e:
+                print(f"Ошибка при добавлении куки: {e}")
+
+    # Переход на главную страницу после установки куков
+    driver.get('https://www.pinterest.com')
+    time.sleep(5)
+
+    # Проверка успешного входа
+    if "login" not in driver.current_url:
+        print("Авторизация по кукам успешна!")
+    else:
+        print("Ошибка авторизации по кукам! Проверьте правильность куков.")
+
 def is_post_downloaded(pin_id):
     return downloaded_posts_collection.find_one({'pin_id': pin_id}) is not None
 
@@ -57,13 +96,26 @@ def save_downloaded_post(pin_id):
 
 def download_random_image(profile_name):
     driver.get(f'https://www.pinterest.com/{profile_name}/_created/')
-    time.sleep(5)
+    time.sleep(10)  # Увеличил время ожидания
+
     image_elements = driver.find_elements(By.XPATH, '//img[@class="hCL kVc L4E MIw"]')
     
     downloaded_images = 0
     for img in image_elements[:10]:  # Только первые 10 изображений
-        pin_src = img.get_attribute('src')
+        pin_srcset = img.get_attribute('srcset')  # Используем srcset для более высокого разрешения
+        if pin_srcset:
+            pin_src = pin_srcset.split(',')[-1].split(' ')[0]  # Берем версию с наибольшим разрешением
+        else:
+            pin_src = img.get_attribute('src')
+
         pin_id = pin_src.split('/')[-1].split('.')[0]
+        pin_alt = img.get_attribute('alt')
+        # Фильтрация изображений профиля или уже загруженных пинов
+        if (pin_alt == profile_name or pin_alt == profile_name.upper() or
+            pin_alt == "Изображение обложки профиля" or 
+            pin_alt == "User Avatar" or  pin_alt == "" or
+            is_post_downloaded(pin_id)):
+            continue
 
         if not is_post_downloaded(pin_id):
             save_downloaded_post(pin_id)
@@ -139,9 +191,10 @@ def post_pin(image_url):
         print("Публикация пина не удалась.")
 
 if __name__ == "__main__":
-    email = "netcool18@yandex.ru"
+    email = "vintagefellow22@gmail.com"
     password = "@Busing1234"
-    login_to_pinterest(email, password)
+    #login_to_pinterest(email, password)
+    login_with_cookies()
 
     profiles = []
     with open('profiles.txt', 'r') as f:
@@ -149,10 +202,16 @@ if __name__ == "__main__":
 
     while profiles:
         random_profile = random.choice(profiles)
-        image_url, pin_id = download_random_image(random_profile)
+        try:
+            image_url, pin_id = download_random_image(random_profile)
         
-        if image_url:
-            post_pin(image_url)
-            break
-        else:
-            profiles.remove(random_profile)
+            if image_url:
+                post_pin(image_url)
+                break
+            else:
+                print(f"Изображения для профиля {random_profile} уже скачаны.")
+                profiles.remove(random_profile)
+    
+        except Exception as e:
+            print(f"Произошла ошибка при обработке профиля {random_profile}: {e}")
+            profiles.remove(random_profile)  # Удаляем профиль из списка при ошибке
