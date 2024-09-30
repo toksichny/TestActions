@@ -1,5 +1,7 @@
 name: test01
 on:
+  schedule:
+    - cron: '0 * * * *'  # Запуск каждый час в начале часа
   workflow_dispatch:  
 jobs:
   test01:
