@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from sys import argv
 
 # ----- Конфигурация MongoDB -----
 MONGO_URI = os.getenv('MONGO_URI', 'mongodb+srv://netcool322:3fMlxrHb7cCYj5S3@cluster0.z21jj.mongodb.net/')
@@ -50,14 +51,15 @@ def login_to_pinterest(email, password):
     else:
         print("Ошибка авторизации, проверьте логин или пароль.")
 
-def login_with_cookies():
+def login_with_cookies(cookie):
     print("Логинимся в Pinterest по кукам...")
     
     # Переход на главную страницу Pinterest для установки куков
     driver.get('https://www.pinterest.com')
     time.sleep(3)
 
-    with open('cookies.json', 'r') as f:
+    #with open('cookies.json', 'r') as f:
+    with open(cookie, 'r') as f:
         cookies = json.load(f)
         for cookie in cookies:
             try:
@@ -192,10 +194,11 @@ def post_pin(image_url):
         print("Публикация пина не удалась.")
 
 if __name__ == "__main__":
-    email = "vintagefellow22@gmail.com"
-    password = "@Busing1234"
+    script_name, email, password, cookies_file = argv
+    #email = "vintagefellow22@gmail.com"
+    #password = "@Busing1234"
     #login_to_pinterest(email, password)
-    login_with_cookies()
+    login_with_cookies(cookies_file)
 
     profiles = []
     with open('profiles.txt', 'r') as f:
