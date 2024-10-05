@@ -194,14 +194,15 @@ def post_pin(image_url):
         print("Публикация пина не удалась.")
 
 if __name__ == "__main__":
-    script_name, email, password, cookies_file = argv
+    script_name, email, password, cookies_file, profiles_file = argv
     #email = "vintagefellow22@gmail.com"
     #password = "@Busing1234"
     #login_to_pinterest(email, password)
     login_with_cookies(cookies_file)
 
     profiles = []
-    with open('profiles.txt', 'r') as f:
+    #with open('profiles.txt', 'r') as f:
+    with open(profiles_file, 'r') as f:
         profiles = [line.strip() for line in f if line.strip()]
 
     while profiles:
