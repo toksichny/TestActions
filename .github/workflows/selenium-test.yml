@@ -19,4 +19,4 @@ jobs:
       - name: Install the necessary packages
         run: pip install -r requirements.txt
       - name: Run the PyTest script
-        run: python app.py vintagefellow22@gmail.com @Busing1234 cookies_vintagefellow.json profiles_vintagefellow.txt
+        run: python app.py vintagefellow22@gmail.com @Qwertych1234 cookies_vintagefellow.json profiles_vintagefellow.txt
