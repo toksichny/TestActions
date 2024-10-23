@@ -196,7 +196,7 @@ def post_pin(image_url):
 if __name__ == "__main__":
     script_name, email, password, cookies_file, profiles_file = argv
     #email = "vintagefellow22@gmail.com"
-    #password = "@Busing1234"
+    #password = ""
     #login_to_pinterest(email, password)
     login_with_cookies(cookies_file)
 
