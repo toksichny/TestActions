@@ -1,0 +1,22 @@
+name: whyfashion
+on:
+  schedule:
+    - cron: '30 * * * *'  # Запуск каждый час тридцать
+  workflow_dispatch:  
+jobs:
+  test01:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v2
+     #Setup Python   
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install software
+        run: sudo apt-get install -y chromium-browser
+      - name: Install the necessary packages
+        run: pip install -r requirements.txt
+      - name: Run the PyTest script
+        run: python app.py n3tcool@yandex.ru @Qwertych1234 cookies_whylovefashion.json profiles_whylovefashion.txt
